@@ -1,0 +1,113 @@
+{
+ "mrc": "MRC de Lac-Saint-Jean-Est",
+ "layers": [
+  {
+   "id": "mat_bruno",
+   "name": "Saint-Bruno",
+   "file": "mat_bruno.geojson",
+   "count": 1373,
+   "bbox": [
+    -71.71855,
+    48.42663,
+    -71.5348,
+    48.51737
+   ]
+  },
+  {
+   "id": "mat_desbiens",
+   "name": "Desbiens",
+   "file": "mat_desbiens.geojson",
+   "count": 586,
+   "bbox": [
+    -71.97427,
+    48.37617,
+    -71.92931,
+    48.42701
+   ]
+  },
+  {
+   "id": "projet",
+   "name": "L'Ascension / autres",
+   "file": "projet.geojson",
+   "count": 2260,
+   "bbox": [
+    -72.09956,
+    48.62905,
+    -71.54629,
+    48.83093
+   ]
+  },
+  {
+   "id": "mat_gedeon",
+   "name": "Saint-Gédéon",
+   "file": "mat_gedeon.geojson",
+   "count": 1840,
+   "bbox": [
+    -71.81756,
+    48.44614,
+    -71.69269,
+    48.57814
+   ]
+  },
+  {
+   "id": "mat_heb",
+   "name": "Hébertville",
+   "file": "mat_heb.geojson",
+   "count": 1902,
+   "bbox": [
+    -71.80571,
+    48.24944,
+    -71.54117,
+    48.46021
+   ]
+  },
+  {
+   "id": "mat_hs",
+   "name": "Hébertville-Station",
+   "file": "mat_hs.geojson",
+   "count": 619,
+   "bbox": [
+    -71.72426,
+    48.40445,
+    -71.56011,
+    48.45895
+   ]
+  },
+  {
+   "id": "mat_meta",
+   "name": "Métabetchouan-Lac-à-la-Croix",
+   "file": "mat_meta.geojson",
+   "count": 2492,
+   "bbox": [
+    -71.94688,
+    48.28508,
+    -71.74402,
+    48.48324
+   ]
+  },
+  {
+   "id": "mat_nazaire",
+   "name": "Saint-Nazaire",
+   "file": "mat_nazaire.geojson",
+   "count": 1237,
+   "bbox": [
+    -71.62527,
+    48.51538,
+    -71.43571,
+    48.65596
+   ]
+  },
+  {
+   "id": "mat_alma3",
+   "name": "Alma",
+   "file": "mat_alma3.geojson",
+   "count": 2735,
+   "bbox": [
+    -71.6595,
+    48.48991,
+    -71.53608,
+    48.54773
+   ]
+  }
+ ]
+}

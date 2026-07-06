@@ -120,9 +120,66 @@ function onPositionError(err) {
   toast(msgs[err.code] || "Erreur GPS");
 }
 
+// ---- Sources locales (données fournies avec l'app) -------------------------
+const localCache = {}; // { [source.id]: { index, files: { file: featureColl } } }
+
+// Point dans un anneau (algorithme pair-impair / ray casting).
+function pointInRing(lng, lat, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = ring[i][0], yi = ring[i][1];
+    const xj = ring[j][0], yj = ring[j][1];
+    const intersect =
+      yi > lat !== yj > lat &&
+      lng < ((xj - xi) * (lat - yi)) / (yj - yi) + xi;
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+// Pair-impair sur TOUS les anneaux : gère les trous et les multi-parties.
+function pointInFeature(lng, lat, feature) {
+  const g = feature.geometry;
+  if (!g) return false;
+  const polys = g.type === "MultiPolygon" ? g.coordinates : [g.coordinates];
+  let inside = false;
+  for (const poly of polys) {
+    for (const ring of poly) {
+      if (pointInRing(lng, lat, ring)) inside = !inside;
+    }
+  }
+  return inside;
+}
+
+async function queryLocal(source, lat, lng) {
+  let cache = localCache[source.id];
+  if (!cache) {
+    const idx = await (await fetch(source.indexUrl)).json();
+    cache = localCache[source.id] = { index: idx, files: {} };
+  }
+  const base = source.indexUrl.replace(/[^/]*$/, ""); // dossier de l'index
+  const tol = 0.0008; // ~90 m de marge sur les bbox
+  const candidates = cache.index.layers.filter((l) => {
+    const [x0, y0, x1, y1] = l.bbox;
+    return lng >= x0 - tol && lng <= x1 + tol && lat >= y0 - tol && lat <= y1 + tol;
+  });
+  for (const layer of candidates) {
+    if (!cache.files[layer.file]) {
+      cache.files[layer.file] = await (await fetch(base + layer.file)).json();
+    }
+    const fc = cache.files[layer.file];
+    for (const feat of fc.features) {
+      if (pointInFeature(lng, lat, feat)) {
+        return { source, feature: feat };
+      }
+    }
+  }
+  return null;
+}
+
 // ---- Requête cadastre ------------------------------------------------------
 // Interroge une source ArcGIS pour la parcelle sous le point (lng/lat WGS84).
-async function querySource(source, lat, lng) {
+async function queryArcgis(source, lat, lng) {
   const geometry = { x: lng, y: lat, spatialReference: { wkid: 4326 } };
   const params = new URLSearchParams({
     f: "geojson",
@@ -146,9 +203,17 @@ async function querySource(source, lat, lng) {
   return { source, feature: data.features[0] };
 }
 
+function querySource(source, lat, lng) {
+  return source.type === "local"
+    ? queryLocal(source, lat, lng)
+    : queryArcgis(source, lat, lng);
+}
+
 // Interroge toutes les sources activées ; retourne la première qui répond.
 async function findParcel(lat, lng) {
-  const sources = CADASTRE_SOURCES.filter((s) => s.enabled && s.url);
+  const sources = CADASTRE_SOURCES.filter(
+    (s) => s.enabled && (s.url || s.type === "local")
+  );
   if (sources.length === 0) {
     throw new Error("Aucune source cadastrale configurée");
   }

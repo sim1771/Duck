@@ -20,10 +20,26 @@ valeur foncière de la parcelle.
 
 ## Comment ça marche
 
-Les données proviennent des services cartographiques publics **ArcGIS** des MRC
-(couche « Matrice graphique des municipalités »). L'application envoie ta
-position à la couche et récupère la parcelle qui s'y trouve, avec ses attributs
-(dont le nom du propriétaire au rôle d'évaluation).
+Les données proviennent des cartes publiques **ArcGIS** des MRC (couche
+« Matrice graphique des municipalités »). Deux types de sources sont supportés :
+
+- **Source en ligne** (`type` non défini) : l'application interroge un service
+  ArcGIS en temps réel avec ta position et récupère la parcelle.
+- **Source locale** (`type: "local"`) : quand une MRC ne publie pas de service
+  interrogeable, ses parcelles sont **extraites et fournies avec l'application**
+  (dossier `data/`). La recherche « point dans polygone » se fait alors
+  **directement sur l'appareil** — pratique quand le réseau est faible.
+
+MRC actuellement incluses :
+
+| MRC | Type | Couverture |
+|---|---|---|
+| Matrice graphique (service en ligne) | en ligne | secteur d'Alma / environs |
+| **MRC de Lac-Saint-Jean-Est** | locale (`data/ljse/`) | Alma, Métabetchouan-Lac-à-la-Croix, Hébertville, Hébertville-Station, Saint-Gédéon, Saint-Bruno, Saint-Nazaire, Desbiens, L'Ascension… (~15 000 parcelles) |
+
+Pour Lac-Saint-Jean-Est, seul le fichier du secteur où tu te trouves est
+téléchargé (repéré via les « boîtes englobantes » dans `data/ljse/index.json`),
+donc l'app reste légère.
 
 > ⚠️ Les informations affichées proviennent du **rôle d'évaluation foncière**
 > public. Elles peuvent contenir des erreurs ou être périmées. Demande toujours

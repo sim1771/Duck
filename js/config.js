@@ -42,20 +42,27 @@ const CADASTRE_SOURCES = [
   // Laisser "enabled: false" tant que l'URL n'est pas confirmée.
   // -------------------------------------------------------------------------
   {
-    id: "mrc-2",
-    name: "MRC #2 (à configurer)",
-    url: "", // <-- coller l'URL du FeatureServer ici
-    enabled: false,
+    id: "mrc-lsje",
+    name: "MRC de Lac-Saint-Jean-Est",
+    // Source "locale" : les données sont fournies avec l'application
+    // (dossier data/ljse/) car cette MRC n'offre pas de service à interroger.
+    // La recherche se fait directement sur l'appareil (fonctionne même avec
+    // une connexion faible une fois le secteur chargé).
+    type: "local",
+    indexUrl: "data/ljse/index.json",
+    enabled: true,
+    // Les attributs sont déjà normalisés lors de l'extraction : correspondance
+    // identité.
     fields: {
-      owner1: "Nom_Prop1",
-      owner2: "Nom_Prop2",
-      matricule: "No_Matricu",
-      civicLow: "No_Civ_Inf",
-      civicHigh: "No_Civ_Sup",
-      street: "Nom_Voie",
-      valueLand: "Valeur_Ter",
-      valueBuilding: "Valeur_Bat",
-      valueTotal: "Valeur_Imm",
+      owner1: "owner1",
+      owner2: "owner2",
+      matricule: "matricule",
+      civicLow: "civicLow",
+      civicHigh: "civicHigh",
+      street: "street",
+      valueLand: "valueLand",
+      valueBuilding: "valueBuilding",
+      valueTotal: "valueTotal",
       lot: null,
     },
   },
