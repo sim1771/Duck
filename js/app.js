@@ -72,6 +72,38 @@ function cleanCivic(v) {
   return !s || s === "0" ? null : s;
 }
 
+// Mots indiquant une personne morale (entreprise, organisme) : on ne réordonne
+// pas le nom dans ce cas.
+const COMPANY_WORDS = /\b(INC|LT[EÉ]E|LTD|ENR|SENC|CIE|FERME|FERMES|GOUVERNEMENT|MUNICIPALIT[EÉ]|VILLE|SUCCESSION|CLUB|COOP|FIDUCIE|GESTION|IMMEUBLES?|IMMOBILIERE?|CONSTRUCTION|TRANSPORTS?|PLACEMENTS?|HYDRO|MRC|COMMISSION|FABRIQUE|PAROISSE|SOCI[EÉ]T[EÉ]|ENTREPRISES?|9\d{3})\b/i;
+
+// Le rôle inscrit les noms "NOM Prénom". Pour un annuaire on veut "Prénom Nom".
+function ownerToDirectoryName(owner) {
+  if (!owner) return null;
+  const clean = owner.replace(/\s+/g, " ").trim();
+  if (COMPANY_WORDS.test(clean)) return clean; // entreprise -> tel quel
+  const parts = clean.split(" ");
+  if (parts.length === 2) return `${parts[1]} ${parts[0]}`; // NOM Prénom -> Prénom Nom
+  return clean;
+}
+
+// Nettoie la ville de correspondance ("ALMA (QUEBEC)", "ALMA, QC." -> "ALMA").
+function cleanTown(v) {
+  const s = cleanVal(v);
+  if (!s) return null;
+  const town = s.split(/[(,]/)[0].trim();
+  return town || null;
+}
+
+// Construit un lien de recherche Canada411 pré-rempli (nom + ville).
+function directoryUrl(owner, town) {
+  const name = ownerToDirectoryName(owner);
+  if (!name) return null;
+  let where = cleanTown(town) || "QC";
+  if (!/\bQC\b/i.test(where)) where += " QC";
+  const p = new URLSearchParams({ stype: "si", what: name, where });
+  return "https://www.canada411.ca/search/?" + p.toString();
+}
+
 // ---- GPS -------------------------------------------------------------------
 function startGps() {
   if (!("geolocation" in navigator)) {
@@ -265,6 +297,11 @@ function showParcel(result, queriedLatLng) {
   else civic = low || high;
   const address = [civic, street].filter(Boolean).join(" ");
 
+  // Adresse postale du propriétaire (utile pour le contacter), si disponible.
+  const mailAddr = get("mailAddr");
+  const mailCity = get("mailCity");
+  const mailFull = [mailAddr, cleanTown(mailCity)].filter(Boolean).join(", ");
+
   // Lignes de détails
   const rows = [];
   if (address) rows.push(["Adresse", address]);
@@ -272,6 +309,7 @@ function showParcel(result, queriedLatLng) {
   if (matr) rows.push(["Matricule", matr]);
   const lot = get("lot");
   if (lot) rows.push(["Lot", lot]);
+  if (mailFull) rows.push(["Adresse postale", mailFull]);
   const vTot = get("valueTotal") && fmtMoney(get("valueTotal"));
   if (vTot) rows.push(["Valeur (immeuble)", vTot]);
   const vTer = get("valueLand") && fmtMoney(get("valueLand"));
@@ -293,6 +331,16 @@ function showParcel(result, queriedLatLng) {
   // Lien Google Maps vers le point interrogé
   const [qlat, qlng] = queriedLatLng;
   el("sheetGmaps").href = `https://www.google.com/maps?q=${qlat},${qlng}`;
+
+  // Recherche du numéro de téléphone (annuaire public Canada411)
+  const phoneBtn = el("sheetPhone");
+  const dirUrl = directoryUrl(owner1, mailCity || get("mun"));
+  if (dirUrl) {
+    phoneBtn.href = dirUrl;
+    phoneBtn.style.display = "";
+  } else {
+    phoneBtn.style.display = "none";
+  }
 
   // Copier le nom du proprio
   el("sheetCopy").onclick = () => {

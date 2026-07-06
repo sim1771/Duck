@@ -15,6 +15,9 @@ valeur foncière de la parcelle.
 - 🛰️ Fonds de carte **Satellite** (Esri) et **Rue** (OpenStreetMap)
 - 🎯 **Parcelle sous ta position** en un bouton, ou **tape n'importe où** sur la carte
 - 👤 Nom du/des **propriétaire(s)**, adresse civique, **matricule**, valeurs foncières
+- 📮 **Adresse postale** du propriétaire (quand disponible) pour le contacter
+- 📞 Bouton **« Numéro »** : recherche du téléphone dans l'annuaire public
+  Canada411, pré-remplie avec le nom et la ville du propriétaire
 - 🧭 Lien direct **Google Maps** + bouton **copier** les infos
 - 📦 **Aucune dépendance CDN** : Leaflet est fourni localement (`vendor/`)
 
@@ -44,6 +47,12 @@ donc l'app reste légère.
 > ⚠️ Les informations affichées proviennent du **rôle d'évaluation foncière**
 > public. Elles peuvent contenir des erreurs ou être périmées. Demande toujours
 > la permission avant d'entrer sur une terre privée.
+
+> ☎️ **Numéro de téléphone :** il n'existe dans *aucun* jeu de données cadastral
+> (le rôle ne contient que le nom et l'adresse postale). Le bouton « Numéro »
+> ouvre simplement une recherche dans l'**annuaire public Canada411** avec le nom
+> et la ville du propriétaire — les résultats ne sont pas garantis (numéro non
+> listé, homonymes, etc.).
 
 ## Utilisation
 

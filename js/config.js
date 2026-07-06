@@ -64,6 +64,10 @@ const CADASTRE_SOURCES = [
       valueBuilding: "valueBuilding",
       valueTotal: "valueTotal",
       lot: null,
+      // Adresse postale du propriétaire + ville (pour le contacter / annuaire).
+      mailAddr: "mailAddr",
+      mailCity: "mailCity",
+      mun: "mun",
     },
   },
 ];
