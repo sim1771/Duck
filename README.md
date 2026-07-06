@@ -1,0 +1,81 @@
+# 🦆 Cadastre Chasse
+
+Outil web mobile pour identifier **le propriétaire d'un champ** à partir de ta
+**position GPS en temps réel** — pratique à la chasse à l'oie/au canard pour
+savoir à qui demander la permission d'accès.
+
+Tu ouvres la page sur ton téléphone, tu vois ta position sur une carte
+satellite, tu appuies sur **« Propriétaire ici »** (ou tu tapes sur un champ) et
+l'application affiche le **nom du propriétaire**, l'adresse, le matricule et la
+valeur foncière de la parcelle.
+
+## Fonctionnalités
+
+- 📍 **GPS en temps réel** avec mode « me suivre »
+- 🛰️ Fonds de carte **Satellite** (Esri) et **Rue** (OpenStreetMap)
+- 🎯 **Parcelle sous ta position** en un bouton, ou **tape n'importe où** sur la carte
+- 👤 Nom du/des **propriétaire(s)**, adresse civique, **matricule**, valeurs foncières
+- 🧭 Lien direct **Google Maps** + bouton **copier** les infos
+- 📦 **Aucune dépendance CDN** : Leaflet est fourni localement (`vendor/`)
+
+## Comment ça marche
+
+Les données proviennent des services cartographiques publics **ArcGIS** des MRC
+(couche « Matrice graphique des municipalités »). L'application envoie ta
+position à la couche et récupère la parcelle qui s'y trouve, avec ses attributs
+(dont le nom du propriétaire au rôle d'évaluation).
+
+> ⚠️ Les informations affichées proviennent du **rôle d'évaluation foncière**
+> public. Elles peuvent contenir des erreurs ou être périmées. Demande toujours
+> la permission avant d'entrer sur une terre privée.
+
+## Utilisation
+
+### En local
+Ouvre simplement `index.html`. Sur téléphone, sers le dossier en HTTPS
+(le GPS exige un contexte sécurisé — `https://` ou `localhost`).
+
+```bash
+# Exemple de serveur local
+python3 -m http.server 8080
+# puis visite http://localhost:8080
+```
+
+### Hébergement gratuit (GitHub Pages)
+1. Pousse ce dépôt sur GitHub.
+2. **Settings → Pages → Deploy from branch** → branche `main` (ou celle-ci), dossier `/root`.
+3. Ouvre l'URL fournie sur ton téléphone. GitHub Pages sert en HTTPS → le GPS
+   fonctionne.
+
+## Ajouter une autre MRC
+
+Chaque MRC a sa propre couche cadastrale. Tout se configure dans
+[`js/config.js`](js/config.js) :
+
+1. Trouve l'URL du **FeatureServer** de la MRC (ex. `.../FeatureServer/0`).
+   Astuce : ouvre l'URL avec `?f=json` pour vérifier le **nom exact des champs**.
+2. Ajoute (ou complète) un bloc dans `CADASTRE_SOURCES` avec l'`url` et la
+   correspondance des champs (`fields`), puis mets `enabled: true`.
+
+L'application interroge **toutes les sources activées** et affiche la première
+qui contient une parcelle sous ton point — pas besoin de choisir la MRC
+manuellement.
+
+Une deuxième MRC est déjà pré-remplie (`id: "mrc-2"`, désactivée) : il ne reste
+qu'à y coller l'URL du FeatureServer.
+
+## Structure
+
+```
+index.html          Page principale
+css/style.css       Styles (interface mobile)
+js/config.js        Sources cadastrales par MRC (à personnaliser)
+js/app.js           Logique : carte, GPS, requêtes, affichage
+vendor/leaflet/     Librairie de carte Leaflet (locale, sans CDN)
+```
+
+## Limites connues
+
+- Les **tuiles de carte** nécessitent une connexion (pas de mode 100 % hors ligne).
+- La couverture dépend des MRC configurées dans `config.js`.
+- La précision GPS varie selon l'appareil et l'environnement.
