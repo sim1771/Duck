@@ -44,17 +44,37 @@ html, body {
   background: linear-gradient(180deg, rgba(15, 23, 32, 0.92), rgba(15, 23, 32, 0));
   pointer-events: none;
 }
-.topbar .brand {
-  pointer-events: auto;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 16px;
+.topbar > * { pointer-events: auto; }
+.topbar .brand-mini { font-size: 22px; flex: none; }
+
+.search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--panel);
+  color: var(--text);
+  font-size: 14px;
+  box-shadow: var(--shadow);
 }
-.topbar .brand .duck { font-size: 20px; }
-.topbar .spacer { flex: 1; }
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus { outline: none; border-color: var(--accent); }
+
+.icon-btn {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: #201400;
+  font-size: 18px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.icon-btn:active { transform: scale(0.94); }
 
 .chip {
   pointer-events: auto;
@@ -261,6 +281,16 @@ html, body {
   border: 3px solid #fff;
   border-radius: 50%;
   box-shadow: 0 0 0 2px rgba(47, 164, 255, 0.5);
+}
+
+/* Marqueur d'un point recherché (lien/coordonnées) */
+.search-dot {
+  width: 20px;
+  height: 20px;
+  background: var(--danger);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(229, 72, 77, 0.5);
 }
 
 .spinner {

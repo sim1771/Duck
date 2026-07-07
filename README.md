@@ -13,6 +13,9 @@ valeur foncière de la parcelle.
 
 - 📍 **GPS en temps réel** avec mode « me suivre »
 - 🛰️ Fonds de carte **Satellite** (Esri) et **Rue** (OpenStreetMap)
+- 🔍 **Barre de recherche** : colle un **lien Google Maps** (même un lien court
+  `maps.app.goo.gl`) ou des **coordonnées** (`48.385, -71.676`) pour aller
+  directement à un endroit reçu d'un partenaire
 - 🎯 **Parcelle sous ta position** en un bouton, ou **tape n'importe où** sur la carte
 - 👤 Nom du/des **propriétaire(s)**, adresse civique, **matricule**, valeurs foncières
 - 🏛️ Bouton **« Rôle actuel »** : ouvre le **rôle d'évaluation en ligne** de la
@@ -109,6 +112,21 @@ js/config.js        Sources cadastrales par MRC (à personnaliser)
 js/app.js           Logique : carte, GPS, requêtes, affichage
 vendor/leaflet/     Librairie de carte Leaflet (locale, sans CDN)
 ```
+
+## Recherche par lien Google Maps
+
+La barre de recherche accepte :
+
+- des **coordonnées** (`48.385, -71.676`) — traitées instantanément, sans réseau ;
+- un **lien Google Maps complet** contenant déjà les coordonnées (`@lat,lng`,
+  `?q=lat,lng`, etc.) — sans réseau ;
+- un **lien court** `maps.app.goo.gl` / `goo.gl/maps` — développé via le service
+  public [unshorten.me](https://unshorten.me) (CORS ouvert) pour en extraire les
+  coordonnées, puis lancer la recherche de parcelle.
+
+> Les liens courts dépendent d'un service tiers en ligne. S'il est indisponible,
+> ouvre le lien dans Google Maps puis colle le **lien complet** ou les
+> **coordonnées** — ces deux formes fonctionnent sans aucun service externe.
 
 ## Limites connues
 

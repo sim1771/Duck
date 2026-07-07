@@ -173,6 +173,83 @@ function onPositionError(err) {
   toast(msgs[err.code] || "Erreur GPS");
 }
 
+// ---- Recherche par lien Google Maps / coordonnées --------------------------
+// Extrait une paire lat/lng d'un texte : coordonnées brutes, ou URL contenant
+// des coordonnées (q=, @lat,lng, !3d!4d, ll=, etc.). Aucun réseau requis.
+function extractCoords(input) {
+  if (!input) return null;
+  const s = input.trim();
+  let decoded = s;
+  try { decoded = decodeURIComponent(s); } catch (_) {}
+  const pats = [
+    /[?&](?:q|query|ll|sll|daddr|destination)=(-?\d{1,3}\.\d+),\s*(-?\d{1,3}\.\d+)/i,
+    /!3d(-?\d{1,3}\.\d+)!4d(-?\d{1,3}\.\d+)/,
+    /@(-?\d{1,3}\.\d+),(-?\d{1,3}\.\d+)/,
+    /(-?\d{1,3}\.\d{3,})[,\s]+(-?\d{1,3}\.\d{3,})/, // paire générique (3+ déc.)
+  ];
+  for (const c of [s, decoded]) {
+    for (const p of pats) {
+      const m = c.match(p);
+      if (m) {
+        const lat = parseFloat(m[1]);
+        const lng = parseFloat(m[2]);
+        if (isFinite(lat) && isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
+          return { lat, lng };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+// Développe un lien court (maps.app.goo.gl, goo.gl/maps…) via unshorten.me
+// (CORS ouvert) puis extrait les coordonnées de l'URL résolue.
+async function resolveShortLink(url) {
+  const api = "https://unshorten.me/json/" + encodeURIComponent(url);
+  const res = await fetch(api);
+  if (!res.ok) throw new Error("service d'expansion indisponible");
+  const data = await res.json();
+  if (!data.success || !data.resolved_url) throw new Error("lien non reconnu");
+  const c = extractCoords(data.resolved_url);
+  if (!c) throw new Error("coordonnées introuvables dans le lien");
+  return c;
+}
+
+let searchMarker = null;
+
+function goToSearch(lat, lng) {
+  followMode = false;
+  followFab.classList.remove("follow-on");
+  if (searchMarker) map.removeLayer(searchMarker);
+  searchMarker = L.marker([lat, lng], {
+    icon: L.divIcon({ className: "", html: '<div class="search-dot"></div>', iconSize: [20, 20] }),
+    interactive: false,
+    zIndexOffset: 900,
+  }).addTo(map);
+  map.setView([lat, lng], 17, { animate: true });
+  el("searchInput").blur();
+  lookupAt(lat, lng, "search");
+}
+
+async function handleSearch() {
+  const raw = el("searchInput").value.trim();
+  if (!raw) { toast("Colle un lien Google Maps ou des coordonnées"); return; }
+  let coords = extractCoords(raw);
+  try {
+    if (!coords && /^https?:\/\//i.test(raw)) {
+      toast("Lecture du lien…");
+      coords = await resolveShortLink(raw);
+    }
+    if (!coords) {
+      toast("Lien non reconnu. Essaie un lien Google Maps complet ou des coordonnées (ex. 48.385, -71.676).");
+      return;
+    }
+    goToSearch(coords.lat, coords.lng);
+  } catch (e) {
+    toast("Impossible de lire ce lien (" + e.message + "). Ouvre-le puis colle le lien complet ou les coordonnées.");
+  }
+}
+
 // ---- Sources locales (données fournies avec l'app) -------------------------
 const localCache = {}; // { [source.id]: { index, files: { file: featureColl } } }
 
@@ -478,7 +555,13 @@ basemapChip.addEventListener("click", () => {
   map.removeLayer(basemaps[currentBasemap]);
   currentBasemap = currentBasemap === "satellite" ? "rue" : "satellite";
   basemaps[currentBasemap].addTo(map);
-  basemapChip.textContent = currentBasemap === "satellite" ? "🛰️ Satellite" : "🗺️ Rue";
+  basemapChip.textContent = currentBasemap === "satellite" ? "🛰️" : "🗺️";
+});
+
+// Recherche (lien Google Maps ou coordonnées)
+el("searchBtn").addEventListener("click", handleSearch);
+el("searchInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { e.preventDefault(); handleSearch(); }
 });
 
 el("closeSheet").addEventListener("click", closeSheet);

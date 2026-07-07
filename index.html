@@ -11,16 +11,26 @@
 
     <!-- Leaflet (fourni localement — aucune dépendance CDN) -->
     <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
-    <link rel="stylesheet" href="css/style.css?v=6" />
+    <link rel="stylesheet" href="css/style.css?v=7" />
   </head>
   <body>
     <div id="map"></div>
 
-    <!-- Barre supérieure -->
+    <!-- Barre supérieure : recherche par lien / coordonnées -->
     <div class="topbar">
-      <div class="brand"><span class="duck">🦆</span> Cadastre Chasse</div>
-      <div class="spacer"></div>
-      <div id="basemapChip" class="chip">🛰️ Satellite</div>
+      <span class="brand-mini">🦆</span>
+      <input
+        id="searchInput"
+        class="search-input"
+        type="text"
+        inputmode="url"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        placeholder="Lien Google Maps ou coordonnées…"
+      />
+      <button id="searchBtn" class="icon-btn" title="Chercher">🔍</button>
+      <div id="basemapChip" class="chip">🛰️</div>
     </div>
 
     <!-- Boutons flottants -->
@@ -55,7 +65,7 @@
 
     <!-- Scripts -->
     <script src="vendor/leaflet/leaflet.js"></script>
-    <script src="js/config.js?v=6"></script>
-    <script src="js/app.js?v=6"></script>
+    <script src="js/config.js?v=7"></script>
+    <script src="js/app.js?v=7"></script>
   </body>
 </html>
