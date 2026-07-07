@@ -208,11 +208,12 @@ html, body {
 
 .sheet-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 14px;
 }
 .sheet-actions a, .sheet-actions button {
-  flex: 1;
+  flex: 1 1 28%;
   text-decoration: none;
   text-align: center;
   padding: 12px;
@@ -223,6 +224,12 @@ html, body {
   font-size: 14px;
   border: none;
   cursor: pointer;
+}
+/* Bouton pleine largeur, mis en évidence (rôle à jour). */
+.sheet-actions a.wide {
+  flex-basis: 100%;
+  background: var(--accent);
+  color: #201400;
 }
 
 /* ---- Toast ---- */

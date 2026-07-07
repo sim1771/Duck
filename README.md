@@ -15,6 +15,9 @@ valeur foncière de la parcelle.
 - 🛰️ Fonds de carte **Satellite** (Esri) et **Rue** (OpenStreetMap)
 - 🎯 **Parcelle sous ta position** en un bouton, ou **tape n'importe où** sur la carte
 - 👤 Nom du/des **propriétaire(s)**, adresse civique, **matricule**, valeurs foncières
+- 🏛️ Bouton **« Rôle actuel »** : ouvre le **rôle d'évaluation en ligne** de la
+  municipalité (propriétaire **à jour**) et copie l'adresse à coller dans la
+  recherche — utile là où les données locales sont anciennes
 - 📮 **Adresse postale** du propriétaire (quand disponible) pour le contacter
 - 📞 Bouton **« Numéro »** : recherche du téléphone dans l'annuaire public
   Canada411, pré-remplie avec le nom et la ville du propriétaire
@@ -43,8 +46,10 @@ MRC actuellement incluses :
 > ⚠️ **Fraîcheur des données.** Chaque source affiche sa date dans le panneau de
 > résultat. Les données de **Lac-Saint-Jean-Est datent de 2018** (seule version
 > publique disponible) : le propriétaire affiché peut être périmé de plusieurs
-> ventes. Le **matricule**, lui, est stable — utilise-le pour confirmer le
-> propriétaire actuel au **rôle d'évaluation en ligne de la municipalité**.
+> ventes. Le bouton **« Rôle actuel »** ouvre le rôle d'évaluation en ligne de la
+> municipalité (plateforme ACCEO Immonet) pour confirmer le **propriétaire
+> actuel** ; l'adresse est copiée automatiquement pour la coller dans la
+> recherche.
 
 Pour Lac-Saint-Jean-Est, seul le fichier du secteur où tu te trouves est
 téléchargé (repéré via les « boîtes englobantes » dans `data/ljse/index.json`),

@@ -94,6 +94,27 @@ function cleanTown(v) {
   return town || null;
 }
 
+// Normalise un nom de municipalité en identifiant d'URL (sans accents).
+function normalizeMun(s) {
+  if (!s) return null;
+  return s
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/['''’]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+// Lien vers le rôle d'évaluation en ligne de la municipalité (si connue).
+function rollUrl(source, mun) {
+  const r = source.roll;
+  if (!r) return null;
+  const slug = normalizeMun(mun);
+  if (!slug || !r.towns.includes(slug)) return null;
+  return r.base + slug + (r.query || "");
+}
+
 // Construit un lien de recherche Canada411 pré-rempli (nom + ville).
 function directoryUrl(owner, town) {
   const name = ownerToDirectoryName(owner);
@@ -348,6 +369,28 @@ function showParcel(result, queriedLatLng) {
     phoneBtn.style.display = "";
   } else {
     phoneBtn.style.display = "none";
+  }
+
+  // Rôle d'évaluation municipal en ligne (propriétaire à jour). On copie le
+  // terme de recherche (adresse, sinon matricule) pour un simple collage.
+  const rollBtn = el("sheetRoll");
+  const rUrl = rollUrl(source, get("mun"));
+  if (rUrl) {
+    const searchTerm =
+      address && !/non codifi/i.test(address) ? address : matr || address || "";
+    rollBtn.href = rUrl;
+    rollBtn.style.display = "";
+    rollBtn.onclick = () => {
+      if (searchTerm) {
+        navigator.clipboard
+          ?.writeText(searchTerm)
+          .then(() => toast("« " + searchTerm + " » copié — colle-le dans la recherche du rôle"));
+      }
+      // la navigation vers le rôle (target _blank) suit normalement
+    };
+  } else {
+    rollBtn.style.display = "none";
+    rollBtn.onclick = null;
   }
 
   // Copier le nom du proprio

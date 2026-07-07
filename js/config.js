@@ -76,6 +76,21 @@ const CADASTRE_SOURCES = [
       mailCity: "mailCity",
       mun: "mun",
     },
+    // Rôle d'évaluation municipal EN LIGNE (propriétaire à jour). Comme les
+    // données locales datent de 2018, ce lien permet de confirmer le
+    // propriétaire actuel. Toutes les municipalités de la MRC utilisent la
+    // plateforme ACCEO Immonet ; le nom de la municipalité (normalisé) sert
+    // d'identifiant d'URL.
+    roll: {
+      base: "https://municipal.acceo.com/immonet/",
+      query: "?language=fr",
+      towns: [
+        "alma", "desbiens", "metabetchouan-lac-a-la-croix", "hebertville",
+        "hebertville-station", "saint-bruno", "saint-gedeon", "saint-nazaire",
+        "labrecque", "lamarche", "lascension-de-notre-seigneur",
+        "saint-henri-de-taillon", "sainte-monique", "saint-ludger-de-milot",
+      ],
+    },
   },
 ];
 
