@@ -371,8 +371,10 @@ function showParcel(result, queriedLatLng) {
     phoneBtn.style.display = "none";
   }
 
-  // Rôle d'évaluation municipal en ligne (propriétaire à jour). On copie le
-  // terme de recherche (adresse, sinon matricule) pour un simple collage.
+  // Rôle d'évaluation municipal en ligne (propriétaire à jour). Le bouton est
+  // un simple lien (comme « Carte »/« Numéro ») pour s'ouvrir de façon fiable.
+  // On copie le terme de recherche (adresse, sinon matricule) sur pointerdown,
+  // AVANT la navigation, de façon non bloquante.
   const rollBtn = el("sheetRoll");
   const rUrl = rollUrl(source, get("mun"));
   if (rUrl) {
@@ -380,17 +382,15 @@ function showParcel(result, queriedLatLng) {
       address && !/non codifi/i.test(address) ? address : matr || address || "";
     rollBtn.href = rUrl;
     rollBtn.style.display = "";
-    rollBtn.onclick = () => {
-      if (searchTerm) {
-        navigator.clipboard
-          ?.writeText(searchTerm)
-          .then(() => toast("« " + searchTerm + " » copié — colle-le dans la recherche du rôle"));
-      }
-      // la navigation vers le rôle (target _blank) suit normalement
+    rollBtn.onpointerdown = () => {
+      try {
+        if (searchTerm) navigator.clipboard?.writeText(searchTerm);
+      } catch (_) {}
+      if (searchTerm) toast("Adresse copiée : « " + searchTerm + " » — colle-la dans la recherche du rôle");
     };
   } else {
     rollBtn.style.display = "none";
-    rollBtn.onclick = null;
+    rollBtn.onpointerdown = null;
   }
 
   // Copier le nom du proprio
