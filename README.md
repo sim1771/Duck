@@ -21,6 +21,9 @@ valeur foncière de la parcelle.
 - 🏛️ Bouton **« Rôle actuel »** : ouvre le **rôle d'évaluation en ligne** de la
   municipalité (propriétaire **à jour**) et copie l'adresse à coller dans la
   recherche — utile là où les données locales sont anciennes
+- 📍 **Adresse approximative** : si la parcelle n'a pas d'adresse au rôle (ex.
+  Maria-Chapdelaine), l'app déduit la route + municipalité par géocodage inverse
+  (OpenStreetMap / Photon)
 - 📮 **Adresse postale** du propriétaire (quand disponible) pour le contacter
 - 📞 Bouton **« Numéro »** : recherche du téléphone dans l'annuaire public
   Canada411, pré-remplie avec le nom et la ville du propriétaire

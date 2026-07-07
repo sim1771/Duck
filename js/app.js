@@ -215,7 +215,45 @@ async function resolveShortLink(url) {
   return c;
 }
 
+// Géocodage inverse : transforme des coordonnées en adresse approximative
+// (route + municipalité). Utilisé quand la parcelle n'a pas d'adresse au rôle.
+const reverseCache = {};
+async function reverseGeocode(lat, lng) {
+  const key = lat.toFixed(5) + "," + lng.toFixed(5);
+  if (key in reverseCache) return reverseCache[key];
+  let result = null;
+  // 1) Nominatim (OpenStreetMap)
+  try {
+    const u =
+      "https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1" +
+      "&accept-language=fr&zoom=18&lat=" + lat + "&lon=" + lng;
+    const r = await fetch(u);
+    if (r.ok) {
+      const a = (await r.json()).address || {};
+      const road = a.road || a.hamlet || a.neighbourhood;
+      const town = a.town || a.village || a.municipality || a.city || a.county;
+      const line = [[a.house_number, road].filter(Boolean).join(" "), town].filter(Boolean);
+      if (line.length) result = line.join(", ");
+    }
+  } catch (_) {}
+  // 2) Photon (Komoot) en secours
+  if (!result) {
+    try {
+      const r = await fetch("https://photon.komoot.io/reverse?lang=fr&lat=" + lat + "&lon=" + lng);
+      if (r.ok) {
+        const p = (((await r.json()).features || [])[0] || {}).properties || {};
+        const road = p.street || p.name;
+        const line = [[p.housenumber, road].filter(Boolean).join(" "), p.city || p.county].filter(Boolean);
+        if (line.length) result = line.join(", ");
+      }
+    } catch (_) {}
+  }
+  reverseCache[key] = result;
+  return result;
+}
+
 let searchMarker = null;
+let lookupToken = 0; // identifie l'affichage courant (garde-fou pour l'async)
 
 function goToSearch(lat, lng) {
   followMode = false;
@@ -425,6 +463,23 @@ function showParcel(result, queriedLatLng) {
         )}</span></div>`
     )
     .join("");
+
+  // Si la parcelle n'a pas d'adresse au rôle, on tente une adresse approximative
+  // par géocodage inverse (route + municipalité), ajoutée en haut une fois prête.
+  const myToken = ++lookupToken;
+  if (!address) {
+    const [glat, glng] = queriedLatLng;
+    reverseGeocode(glat, glng).then((approx) => {
+      if (approx && myToken === lookupToken && sheet.classList.contains("open")) {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML =
+          '<span class="k">Adresse (approx.)</span><span class="v">' +
+          escapeHtml(approx) + "</span>";
+        el("sheetRows").insertBefore(row, el("sheetRows").firstChild);
+      }
+    });
+  }
 
   // Source + fraîcheur des données
   let srcHtml = "Source : " + escapeHtml(source.name);
