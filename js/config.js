@@ -41,6 +41,63 @@ const CADASTRE_SOURCES = [
   },
 
   // -------------------------------------------------------------------------
+  // MRC de Maria-Chapdelaine (Dolbeau-Mistassini et environs). Service en
+  // ligne, à jour. Couche « matrice_graphique_municipale » : nom du
+  // propriétaire + matricule + territoire (municipalité) + date de mise à jour.
+  // -------------------------------------------------------------------------
+  {
+    id: "mrc-mc",
+    name: "MRC de Maria-Chapdelaine",
+    url:
+      "https://services8.arcgis.com/yvy06yJ2ktvgwNxC/arcgis/rest/services/" +
+      "Propri%C3%A9t%C3%A9/FeatureServer/2",
+    enabled: true,
+    dataDate: "2025",
+    stale: false,
+    fields: {
+      owner1: "B75_Nom_P1",
+      owner2: null,
+      matricule: "MatriculeT",
+      civicLow: null,
+      civicHigh: null,
+      street: null,
+      valueLand: null,
+      valueBuilding: null,
+      valueTotal: null,
+      lot: null,
+      mun: "Territoire",
+      updated: "MAJ", // date de mise à jour de la parcelle
+    },
+  },
+
+  // Couche « Villégiature_chalet » de la même MRC : propriétaires de chalets /
+  // lots de villégiature (souvent en bordure de lacs et rivières).
+  {
+    id: "mrc-mc-chalet",
+    name: "MRC de Maria-Chapdelaine (villégiature)",
+    url:
+      "https://services8.arcgis.com/yvy06yJ2ktvgwNxC/arcgis/rest/services/" +
+      "Propri%C3%A9t%C3%A9/FeatureServer/1",
+    enabled: true,
+    dataDate: "2025",
+    stale: false,
+    fields: {
+      owner1: "Nom",
+      owner2: null,
+      matricule: "Matrice",
+      civicLow: null,
+      civicHigh: null,
+      street: null,
+      valueLand: null,
+      valueBuilding: null,
+      valueTotal: null,
+      lot: null,
+      mun: null,
+      updated: "MAJ",
+    },
+  },
+
+  // -------------------------------------------------------------------------
   // Deuxième MRC — à compléter avec l'URL réelle du FeatureServer.
   // Laisser "enabled: false" tant que l'URL n'est pas confirmée.
   // -------------------------------------------------------------------------

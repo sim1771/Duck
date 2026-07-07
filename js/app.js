@@ -407,6 +407,8 @@ function showParcel(result, queriedLatLng) {
   if (matr) rows.push(["Matricule", matr]);
   const lot = get("lot");
   if (lot) rows.push(["Lot", lot]);
+  const updated = get("updated");
+  if (updated) rows.push(["Mise à jour", updated]);
   if (mailFull) rows.push(["Adresse postale", mailFull]);
   const vTot = get("valueTotal") && fmtMoney(get("valueTotal"));
   if (vTot) rows.push(["Valeur (immeuble)", vTot]);

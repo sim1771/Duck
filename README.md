@@ -44,6 +44,7 @@ MRC actuellement incluses :
 | MRC | Type | Données | Couverture |
 |---|---|---|---|
 | **MRC du Domaine-du-Roy** | en ligne | **mars 2025** (à jour) | secteur Roberval / Saint-Félicien |
+| **MRC de Maria-Chapdelaine** | en ligne | **2025** (à jour) | Dolbeau-Mistassini, Normandin, Albanel, Girardville, Péribonka, Saint-Augustin, Saint-Stanislas, Saint-Thomas-Didyme… (13 municipalités) + couche villégiature/chalets |
 | **MRC de Lac-Saint-Jean-Est** | locale (`data/ljse/`) | **2018** ⚠️ | Alma, Métabetchouan-Lac-à-la-Croix, Hébertville, Hébertville-Station, Saint-Gédéon, Saint-Bruno, Saint-Nazaire, Desbiens, L'Ascension… (~15 000 parcelles) |
 
 > ⚠️ **Fraîcheur des données.** Chaque source affiche sa date dans le panneau de
