@@ -15,12 +15,15 @@
 const CADASTRE_SOURCES = [
   {
     id: "mrc-ddr",
-    name: "MRC (matrice graphique)",
+    name: "MRC du Domaine-du-Roy",
     // Couche "Matrice graphique des municipalités" – contient le propriétaire.
     url:
       "https://services.arcgis.com/u17rFbPcC1ozsiJ0/arcgis/rest/services/" +
       "Matrice_graphique_des_municipalit%C3%A9s/FeatureServer/0",
     enabled: true,
+    // Fraîcheur des données (voir editingInfo du service).
+    dataDate: "mars 2025",
+    stale: false,
     // Correspondance des champs de CETTE couche vers les champs génériques
     // utilisés par l'application. Mettre à null si un champ n'existe pas.
     fields: {
@@ -51,6 +54,10 @@ const CADASTRE_SOURCES = [
     type: "local",
     indexUrl: "data/ljse/index.json",
     enabled: true,
+    // ⚠️ La carte publique source date de 2018 et n'a jamais été mise à jour.
+    // Les propriétaires peuvent avoir changé depuis. Vérifier au rôle municipal.
+    dataDate: "2018",
+    stale: true,
     // Les attributs sont déjà normalisés lors de l'extraction : correspondance
     // identité.
     fields: {

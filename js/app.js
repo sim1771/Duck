@@ -326,7 +326,15 @@ function showParcel(result, queriedLatLng) {
     )
     .join("");
 
-  el("sheetSource").textContent = "Source : " + source.name;
+  // Source + fraîcheur des données
+  let srcHtml = "Source : " + escapeHtml(source.name);
+  if (source.dataDate) srcHtml += " · Données&nbsp;: " + escapeHtml(source.dataDate);
+  if (source.stale) {
+    srcHtml +=
+      '<span class="stale-warn">⚠️ Données anciennes — le propriétaire ' +
+      "peut avoir changé. À confirmer au rôle municipal.</span>";
+  }
+  el("sheetSource").innerHTML = srcHtml;
 
   // Lien Google Maps vers le point interrogé
   const [qlat, qlng] = queriedLatLng;

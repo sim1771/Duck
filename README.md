@@ -35,10 +35,16 @@ Les données proviennent des cartes publiques **ArcGIS** des MRC (couche
 
 MRC actuellement incluses :
 
-| MRC | Type | Couverture |
-|---|---|---|
-| Matrice graphique (service en ligne) | en ligne | secteur d'Alma / environs |
-| **MRC de Lac-Saint-Jean-Est** | locale (`data/ljse/`) | Alma, Métabetchouan-Lac-à-la-Croix, Hébertville, Hébertville-Station, Saint-Gédéon, Saint-Bruno, Saint-Nazaire, Desbiens, L'Ascension… (~15 000 parcelles) |
+| MRC | Type | Données | Couverture |
+|---|---|---|---|
+| **MRC du Domaine-du-Roy** | en ligne | **mars 2025** (à jour) | secteur Roberval / Saint-Félicien |
+| **MRC de Lac-Saint-Jean-Est** | locale (`data/ljse/`) | **2018** ⚠️ | Alma, Métabetchouan-Lac-à-la-Croix, Hébertville, Hébertville-Station, Saint-Gédéon, Saint-Bruno, Saint-Nazaire, Desbiens, L'Ascension… (~15 000 parcelles) |
+
+> ⚠️ **Fraîcheur des données.** Chaque source affiche sa date dans le panneau de
+> résultat. Les données de **Lac-Saint-Jean-Est datent de 2018** (seule version
+> publique disponible) : le propriétaire affiché peut être périmé de plusieurs
+> ventes. Le **matricule**, lui, est stable — utilise-le pour confirmer le
+> propriétaire actuel au **rôle d'évaluation en ligne de la municipalité**.
 
 Pour Lac-Saint-Jean-Est, seul le fichier du secteur où tu te trouves est
 téléchargé (repéré via les « boîtes englobantes » dans `data/ljse/index.json`),
